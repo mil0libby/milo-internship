@@ -12,7 +12,7 @@ const HotCollections = () => {
   const [isLoading, setIsLoading] = useState(true); // Track loading state
 
   useEffect(() => {
-    // Fetch data and apply timeout for consistent skeleton display
+    // Fetch data
     const fetchData = async () => {
       const response = await axios.get(
         "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"

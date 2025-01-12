@@ -1,9 +1,71 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
-import nftImage from "../../images/nftImage.jpg";
+import axios from "axios";
+import OwlCarousel from "react-owl-carousel";
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel/dist/assets/owl.theme.default.css";
 
 const NewItems = () => {
+  const [items, setItems] = useState([]);
+  const [timeLeft, setTimeLeft] = useState({});
+
+  const carouselOptions = {
+    items: 4,
+    margin: 15,
+    loop: true,
+    nav: true,
+    dots: false,
+    responsive: {
+      0: { items: 1 },
+      600: { items: 2 },
+      800: { items: 3 },
+      1000: { items: 4 },
+    },
+  };
+
+  function getDate(expiryDate) {
+    let dateString = "";
+    const remainingTime = expiryDate - Date.now();
+    const seconds = Math.max(Math.floor(remainingTime / 1000), 0); // Ensure it doesn't go negative
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    return `${hours}h ${minutes}m ${remainingSeconds}s`;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems"
+      );
+      setItems(response.data);
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft((prevTimeLeft) => {
+        const updatedTimeLeft = { ...prevTimeLeft };
+        items.forEach((item, index) => {
+          if (item.expiryDate) {
+            const remainingTime = item.expiryDate - Date.now();
+            if (remainingTime > 0) {
+              updatedTimeLeft[index] = getDate(item.expiryDate);
+            } else {
+              updatedTimeLeft[index] = "Expired";
+            }
+          }
+        });
+        return updatedTimeLeft;
+      });
+    }, 1000);
+    console.log("updated");
+    // Cleanup the interval on component unmount
+    return () => clearInterval(interval);
+  }, [items]);
+
   return (
     <section id="section-items" className="no-bottom">
       <div className="container">
@@ -14,9 +76,14 @@ const NewItems = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          {new Array(4).fill(0).map((_, index) => (
-            <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
-              <div className="nft__item">
+
+          <OwlCarousel
+            key={items.length} // Force re-render
+            className="owl-theme"
+            {...carouselOptions}
+          >
+            {items.map((item, index) => (
+              <div key={index} className="nft__item">
                 <div className="author_list_pp">
                   <Link
                     to="/author"
@@ -24,11 +91,13 @@ const NewItems = () => {
                     data-bs-placement="top"
                     title="Creator: Monica Lucas"
                   >
-                    <img className="lazy" src={AuthorImage} alt="" />
+                    <img className="lazy" src={item.authorImage} alt="" />
                     <i className="fa fa-check"></i>
                   </Link>
                 </div>
-                <div className="de_countdown">5h 30m 32s</div>
+                {item.expiryDate && (
+                  <div className="de_countdown">{timeLeft[index]}</div>
+                )}
 
                 <div className="nft__item_wrap">
                   <div className="nft__item_extra">
@@ -51,7 +120,7 @@ const NewItems = () => {
 
                   <Link to="/item-details">
                     <img
-                      src={nftImage}
+                      src={item.nftImage}
                       className="lazy nft__item_preview"
                       alt=""
                     />
@@ -59,17 +128,17 @@ const NewItems = () => {
                 </div>
                 <div className="nft__item_info">
                   <Link to="/item-details">
-                    <h4>Pinky Ocean</h4>
+                    <h4>{item.title}</h4>
                   </Link>
-                  <div className="nft__item_price">3.08 ETH</div>
+                  <div className="nft__item_price">{item.price} ETH</div>
                   <div className="nft__item_like">
                     <i className="fa fa-heart"></i>
-                    <span>69</span>
+                    <span>{item.likes}</span>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </OwlCarousel>
         </div>
       </div>
     </section>
