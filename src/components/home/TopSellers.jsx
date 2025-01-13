@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthorImage from "../../images/author_thumbnail.jpg";
 import axios from "axios";
+import Skeleton from "react-loading-skeleton";
 
 const TopSellers = () => {
   const [sellers, setSellers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,11 +17,34 @@ const TopSellers = () => {
     };
 
     fetchData();
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   }, []);
 
-  useEffect(() => console.log(sellers), [sellers]);
+  function renderSkeletons() {
+    return (
+      <div className="col-md-12">
+        <ol className="author_list">
+          {new Array(12).fill(0).map((_, index) => (
+            <li key={index}>
+              <div className="author_list_pp">
+                <Skeleton circle={true} height={50} width={50}></Skeleton>
+              </div>
+              <div className="author_list_info">
+                <Skeleton width={60} height={20}></Skeleton>
+                <Skeleton width={40} height={20}></Skeleton>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
 
-  return (
+  return isLoading ? (
+    renderSkeletons()
+  ) : (
     <section id="section-popular" className="pb-5">
       <div className="container">
         <div className="row">
