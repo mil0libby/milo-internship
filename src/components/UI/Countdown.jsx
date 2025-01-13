@@ -16,6 +16,7 @@ export default function Countdown({ timeLeft }) {
     const interval = setInterval(() => {
       setTimePassed((prev) => prev + 1);
     }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return <div className="de_countdown">{getDate(timeLeft - timePassed)}</div>;
