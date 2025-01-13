@@ -19,7 +19,7 @@ const TopSellers = () => {
     fetchData();
     setTimeout(() => {
       setIsLoading(false);
-    }, 10000);
+    }, 1000);
   }, []);
 
   function renderSkeletons() {
