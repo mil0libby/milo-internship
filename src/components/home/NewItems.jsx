@@ -61,7 +61,7 @@ const NewItems = () => {
         return updatedTimeLeft;
       });
     }, 1000);
-    console.log("updated");
+
     // Cleanup the interval on component unmount
     return () => clearInterval(interval);
   }, [items]);
@@ -89,7 +89,7 @@ const NewItems = () => {
                     to="/author"
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
-                    title="Creator: Monica Lucas"
+                    title="NFT Creator"
                   >
                     <img className="lazy" src={item.authorImage} alt="" />
                     <i className="fa fa-check"></i>
@@ -118,7 +118,7 @@ const NewItems = () => {
                     </div>
                   </div>
 
-                  <Link to="/item-details">
+                  <Link to={`/item-details/${item.nftId}`}>
                     <img
                       src={item.nftImage}
                       className="lazy nft__item_preview"
@@ -127,7 +127,7 @@ const NewItems = () => {
                   </Link>
                 </div>
                 <div className="nft__item_info">
-                  <Link to="/item-details">
+                  <Link to={`/item-details/${item.nftId}`}>
                     <h4>{item.title}</h4>
                   </Link>
                   <div className="nft__item_price">{item.price} ETH</div>
