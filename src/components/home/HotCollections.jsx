@@ -22,12 +22,12 @@ const HotCollections = () => {
 
     fetchData();
 
-    const timeoutId = setTimeout(() => {
+    const timeout = setTimeout(() => {
       setIsLoading(false); // Update state after timeout
     }, 1000);
 
     // Cleanup the timeout when the component unmounts
-    return () => clearTimeout(timeoutId);
+    return () => clearTimeout(timeout);
   }, []);
 
   const carouselOptions = {
