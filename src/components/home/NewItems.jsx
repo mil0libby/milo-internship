@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import Skeleton from "react-loading-skeleton";
+import Countdown from "../UI/Countdown";
 
 const NewItems = () => {
   const [items, setItems] = useState([]);
-  const [timeLeft, setTimeLeft] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true); // Track loading state
 
   const carouselOptions = {
@@ -49,16 +50,6 @@ const NewItems = () => {
       ));
   };
 
-  function getDate(expiryDate) {
-    let dateString = "";
-    const remainingTime = expiryDate - Date.now();
-    const seconds = Math.max(Math.floor(remainingTime / 1000), 0); // Ensure it doesn't go negative
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-    return `${hours}h ${minutes}m ${remainingSeconds}s`;
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
@@ -72,17 +63,6 @@ const NewItems = () => {
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft((prevTimeLeft) => {
-        return [0, 0, 0];
-      });
-    }, 1000);
-
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval);
-  }, [items]);
 
   return (
     <section id="section-items" className="no-bottom">
@@ -116,9 +96,7 @@ const NewItems = () => {
                       </Link>
                     </div>
                     {item.expiryDate && (
-                      <div className="de_countdown">
-                        {getDate(item.expiryDate)}
-                      </div>
+                      <Countdown timeLeft={item.expiryDate}></Countdown>
                     )}
 
                     <div className="nft__item_wrap">
