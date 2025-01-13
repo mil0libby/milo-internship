@@ -12,7 +12,7 @@ const HotCollections = () => {
   const [isLoading, setIsLoading] = useState(true); // Track loading state
 
   useEffect(() => {
-    // Fetch data and apply timeout for consistent skeleton display
+    // Fetch data
     const fetchData = async () => {
       const response = await axios.get(
         "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
@@ -22,12 +22,12 @@ const HotCollections = () => {
 
     fetchData();
 
-    const timeoutId = setTimeout(() => {
+    const timeout = setTimeout(() => {
       setIsLoading(false); // Update state after timeout
     }, 1000);
 
     // Cleanup the timeout when the component unmounts
-    return () => clearTimeout(timeoutId);
+    return () => clearTimeout(timeout);
   }, []);
 
   const carouselOptions = {

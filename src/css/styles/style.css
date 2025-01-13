@@ -16722,3 +16722,7 @@ img {
 .nft_coll_info--skeleton {
   line-height: 1 !important;
 }
+
+.nft__img--wrapper {
+  width: 100%;
+}
