@@ -84,7 +84,7 @@ const HotCollections = () => {
               {isLoading
                 ? renderSkeletons()
                 : collections.map((nft, index) => (
-                    <div className="item" key={index}>
+                    <div className="item" key={index} data-aos="fade-in">
                       <div className="nft_coll">
                         <div className="nft_wrap">
                           <Link to={`/item-details/${nft.nftId}`}>

@@ -83,7 +83,7 @@ const NewItems = () => {
             {isLoading
               ? renderSkeletons()
               : items.map((item, index) => (
-                  <div key={index} className="nft__item">
+                  <div key={index} className="nft__item" data-aos="fade-in">
                     <div className="author_list_pp">
                       <Link
                         to={`/author/${item.authorId}`}
