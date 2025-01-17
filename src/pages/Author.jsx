@@ -9,6 +9,7 @@ const Author = () => {
   const { id } = useParams();
   const [author, setAuthor] = useState();
   const [loading, setLoading] = useState(true);
+  const [following, setFollowing] = useState(false);
 
   const renderSkeletons = () => {
     return (
@@ -145,10 +146,15 @@ const Author = () => {
                   <div className="profile_follow de-flex">
                     <div className="de-flex-col">
                       <div className="profile_follower">
-                        {author.followers} followers
+                        {following ? author.followers + 1 : author.followers}{" "}
+                        followers
                       </div>
-                      <Link to="#" className="btn-main">
-                        Follow
+                      <Link
+                        to="#"
+                        className="btn-main"
+                        onClick={() => setFollowing((prev) => !prev)}
+                      >
+                        {following ? "Unfollow" : "Follow"}
                       </Link>
                     </div>
                   </div>
